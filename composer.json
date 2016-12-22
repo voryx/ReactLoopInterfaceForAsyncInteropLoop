@@ -1,0 +1,29 @@
+{
+    "name": "voryx/pool-poretni-cnysa-tcaer",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matt Bonneau",
+            "email": "matt@bonneau.net"
+        },
+        {
+            "name": "David Dan",
+            "email": "davidwdan@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "async-interop/event-loop": "^0.3",
+        "react/event-loop": "^0.4.2"
+    },
+    "require-dev": {
+        "amphp/loop": "dev-master",
+        "phpunit/phpunit": "^5.0",
+        "wyrihaximus/react-async-interop-loop": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Voryx\\React\\EventLoop\\": "src/"
+        }
+    }
+}
