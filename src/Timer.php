@@ -19,6 +19,6 @@ final class Timer extends ReactTimer
 
     public function cancel()
     {
-        Loop::get()->cancel($this->timerKey);
+        Loop::cancel($this->timerKey);
     }
 }

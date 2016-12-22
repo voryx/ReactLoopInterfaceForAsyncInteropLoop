@@ -17,7 +17,7 @@ final class Loop implements LoopInterface
         if (isset($this->readStreams[$key])) {
             throw new \Exception('key set twice');
         }
-        $this->readStreams[$key] = InteropLoop::get()->onReadable($stream, function () use ($listener, $stream) {
+        $this->readStreams[$key] = InteropLoop::onReadable($stream, function () use ($listener, $stream) {
             $listener($stream);
         });
     }
@@ -30,7 +30,7 @@ final class Loop implements LoopInterface
             throw new \Exception('key set twice');
         }
 
-        $this->writeStreams[$key] = InteropLoop::get()->onWritable($stream, function () use ($listener, $stream) {
+        $this->writeStreams[$key] = InteropLoop::onWritable($stream, function () use ($listener, $stream) {
             $listener($stream);
         });
     }
@@ -39,7 +39,7 @@ final class Loop implements LoopInterface
     {
         $key = (int)$stream;
         if (isset($this->readStreams[$key])) {
-            InteropLoop::get()->cancel($this->readStreams[$key]);
+            InteropLoop::cancel($this->readStreams[$key]);
             unset($this->readStreams[$key]);
         }
     }
@@ -48,7 +48,7 @@ final class Loop implements LoopInterface
     {
         $key = (int)$stream;
         if (isset($this->writeStreams[$key])) {
-            InteropLoop::get()->cancel($this->writeStreams[$key]);
+            InteropLoop::cancel($this->writeStreams[$key]);
             unset($this->writeStreams[$key]);
         }
     }
@@ -66,9 +66,9 @@ final class Loop implements LoopInterface
         };
         $millis          = $interval * 1000;
         if ($isPeriodic) {
-            $timerKey = InteropLoop::get()->repeat($millis, $wrappedCallback);
+            $timerKey = InteropLoop::repeat($millis, $wrappedCallback);
         } else {
-            $timerKey = InteropLoop::get()->delay($millis, $wrappedCallback);
+            $timerKey = InteropLoop::delay($millis, $wrappedCallback);
         }
         $timer = new Timer(
             $timerKey,
@@ -102,7 +102,7 @@ final class Loop implements LoopInterface
 
     public function nextTick(callable $listener)
     {
-        InteropLoop::get()->defer(function () use ($listener) {
+        InteropLoop::defer(function () use ($listener) {
             $listener($this);
         });
     }
@@ -130,6 +130,6 @@ final class Loop implements LoopInterface
 
     public function stop()
     {
-        InteropLoop::get()->stop();
+        InteropLoop::stop();
     }
 }
