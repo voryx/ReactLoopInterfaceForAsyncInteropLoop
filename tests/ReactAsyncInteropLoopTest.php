@@ -5,7 +5,6 @@ namespace Voryx\Tests\React\EventLoop;
 use Interop\Async\Loop;
 use React\EventLoop\StreamSelectLoop;
 use React\Tests\EventLoop\AbstractLoopTest;
-use Voryx\React\EventLoop\ReactAsyncInteropLoop;
 use WyriHaximus\React\AsyncInteropLoop\ReactDriverFactory;
 
 class ReactAsyncInteropLoopTest extends AbstractLoopTest
@@ -16,7 +15,7 @@ class ReactAsyncInteropLoopTest extends AbstractLoopTest
         $driver = ReactDriverFactory::createFactoryFromLoop(StreamSelectLoop::class);
         Loop::setFactory($driver);
 
-        return new ReactAsyncInteropLoop();
+        return new \Voryx\React\AsyncInterop\Loop();
     }
 
     public function testRecursiveNextTick()

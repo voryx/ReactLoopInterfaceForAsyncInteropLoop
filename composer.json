@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Voryx\\React\\EventLoop\\": "src/"
+            "Voryx\\React\\AsyncInterop\\": "src/"
         }
     }
 }

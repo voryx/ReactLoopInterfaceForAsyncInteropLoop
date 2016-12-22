@@ -1,12 +1,12 @@
 <?php
 
-namespace Voryx\React\EventLoop;
+namespace Voryx\React\AsyncInterop;
 
-use Interop\Async\Loop;
+use Interop\Async\Loop as InteropLoop;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\Timer\TimerInterface;
 
-class ReactAsyncInteropLoop implements LoopInterface
+final class Loop implements LoopInterface
 {
     private $readStreams = [];
     private $writeStreams = [];
@@ -17,7 +17,7 @@ class ReactAsyncInteropLoop implements LoopInterface
         if (isset($this->readStreams[$key])) {
             throw new \Exception('key set twice');
         }
-        $this->readStreams[$key] = Loop::get()->onReadable($stream, function () use ($listener, $stream) {
+        $this->readStreams[$key] = InteropLoop::get()->onReadable($stream, function () use ($listener, $stream) {
             $listener($stream);
         });
     }
@@ -30,7 +30,7 @@ class ReactAsyncInteropLoop implements LoopInterface
             throw new \Exception('key set twice');
         }
 
-        $this->writeStreams[$key] = Loop::get()->onWritable($stream, function () use ($listener, $stream) {
+        $this->writeStreams[$key] = InteropLoop::get()->onWritable($stream, function () use ($listener, $stream) {
             $listener($stream);
         });
     }
@@ -39,7 +39,7 @@ class ReactAsyncInteropLoop implements LoopInterface
     {
         $key = (int)$stream;
         if (isset($this->readStreams[$key])) {
-            Loop::get()->cancel($this->readStreams[$key]);
+            InteropLoop::get()->cancel($this->readStreams[$key]);
             unset($this->readStreams[$key]);
         }
     }
@@ -48,7 +48,7 @@ class ReactAsyncInteropLoop implements LoopInterface
     {
         $key = (int)$stream;
         if (isset($this->writeStreams[$key])) {
-            Loop::get()->cancel($this->writeStreams[$key]);
+            InteropLoop::get()->cancel($this->writeStreams[$key]);
             unset($this->writeStreams[$key]);
         }
     }
@@ -66,11 +66,11 @@ class ReactAsyncInteropLoop implements LoopInterface
         };
         $millis          = $interval * 1000;
         if ($isPeriodic) {
-            $timerKey = Loop::get()->repeat($millis, $wrappedCallback);
+            $timerKey = InteropLoop::get()->repeat($millis, $wrappedCallback);
         } else {
-            $timerKey = Loop::get()->delay($millis, $wrappedCallback);
+            $timerKey = InteropLoop::get()->delay($millis, $wrappedCallback);
         }
-        $timer = new ReactAsyncInteropTimer(
+        $timer = new Timer(
             $timerKey,
             $interval,
             $callback,
@@ -102,7 +102,7 @@ class ReactAsyncInteropLoop implements LoopInterface
 
     public function nextTick(callable $listener)
     {
-        Loop::get()->defer(function () use ($listener) {
+        InteropLoop::get()->defer(function () use ($listener) {
             $listener($this);
         });
     }
@@ -114,7 +114,7 @@ class ReactAsyncInteropLoop implements LoopInterface
 
     public function tick()
     {
-        $loop = Loop::get();
+        $loop = InteropLoop::get();
 
         $loop->defer(function () use ($loop) {
             $loop->stop();
@@ -125,11 +125,11 @@ class ReactAsyncInteropLoop implements LoopInterface
 
     public function run()
     {
-        Loop::get()->run();
+        InteropLoop::get()->run();
     }
 
     public function stop()
     {
-        Loop::get()->stop();
+        InteropLoop::get()->stop();
     }
 }

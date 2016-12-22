@@ -3,16 +3,16 @@
 namespace Voryx\Tests\React\EventLoop;
 
 use Amp\Loop\LoopFactory;
-use Interop\Async\Loop;
 use React\Tests\EventLoop\AbstractLoopTest;
-use Voryx\React\EventLoop\ReactAsyncInteropLoop;
+use Voryx\React\AsyncInterop\Loop;
+
 
 class ReactAsyncInteropLoopWithAmpTest extends AbstractLoopTest
 {
     public function createLoop()
     {
-        Loop::setFactory(new LoopFactory());
-        return new ReactAsyncInteropLoop();
+        \Interop\Async\Loop::setFactory(new LoopFactory());
+        return new Loop();
     }
 
     public function testRecursiveNextTick()

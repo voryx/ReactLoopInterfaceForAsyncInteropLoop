@@ -1,12 +1,12 @@
 <?php
 
-namespace Voryx\React\EventLoop;
+namespace Voryx\React\AsyncInterop;
 
 use Interop\Async\Loop;
 use React\EventLoop\LoopInterface;
-use React\EventLoop\Timer\Timer;
+use React\EventLoop\Timer\Timer as ReactTimer;
 
-class ReactAsyncInteropTimer extends Timer
+final class Timer extends ReactTimer
 {
     private $timerKey;
 
